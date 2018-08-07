@@ -1,0 +1,19 @@
+{
+    "name": "andzone/laravel-kafka",
+    "description": "kafka",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "andzone",
+            "email": "stoneworld1991@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4":{
+            "andZone\\Kafka\\": "src/"
+        }
+    }
+}
