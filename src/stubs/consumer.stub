@@ -1,0 +1,29 @@
+<?php
+
+namespace DummyNamespace;
+
+use andZone\Kafka\MessageConsumer;
+
+class DummyClass extends MessageConsumer
+{
+
+    /**
+     * Create a new consumer instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * consume the message.
+     *
+     * @return void
+     */
+    public function consumeMessage()
+    {
+        //
+    }
+}
