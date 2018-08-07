@@ -3,7 +3,7 @@
  * @author : andzone
  */
 
-namespace andZone\Kafka;
+namespace AndZone\Kafka;
 
 class MessageProducer
 {
@@ -60,10 +60,3 @@ class MessageProducer
         return $producer;
     }
 }
-include 'config.php';
-$producer = new MessageProducer(new Conf(),  [
-    'log_level' => LOG_DEBUG,
-    'server' => '127.0.0.1',
-]);
-
-$producer->sendMessage(10001, 'test', ['id' => 'test']);

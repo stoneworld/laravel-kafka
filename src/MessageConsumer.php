@@ -3,7 +3,7 @@
  * @author : andzone
  */
 
-namespace andZone\Kafka;
+namespace AndZone\Kafka;
 
 abstract class MessageConsumer
 {
