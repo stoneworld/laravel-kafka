@@ -2,7 +2,7 @@
 
 namespace DummyNamespace;
 
-use andZone\Kafka\MessageConsumer;
+use AndZone\Kafka\MessageConsumer;
 
 class DummyClass extends MessageConsumer
 {

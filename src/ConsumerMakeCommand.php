@@ -44,9 +44,9 @@ class ConsumerMakeCommand extends GeneratorCommand
      * @param  string  $rootNamespace
      * @return string
      */
-    protected function rootNamespace()
+    protected function getDefaultNamespace($rootNamespace)
     {
-        return 'App\Console\Commands\Consumers';
+        return $rootNamespace.'\Console\Consumers';
     }
     /**
      * Get the console command options.
@@ -55,6 +55,6 @@ class ConsumerMakeCommand extends GeneratorCommand
      */
     protected function getOptions()
     {
-        return 'nothing';
+        return [];
     }
 }
