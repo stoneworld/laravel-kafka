@@ -70,7 +70,6 @@ abstract class MessageConsumer extends Command
                 case RD_KAFKA_RESP_ERR_NO_ERROR:
                     // 消费消息
                     $data = json_decode($message->payload, true);
-                    var_dump($data);
                     $this->consumeMessage($data);
                     break;
                 case RD_KAFKA_RESP_ERR__PARTITION_EOF:

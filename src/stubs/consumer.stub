@@ -21,6 +21,13 @@ class DummyClass extends MessageConsumer
     protected $description = 'Command description';
 
     /**
+     * The consumer has subscribed topics.
+     *
+     * @var array
+     */
+    protected $subscribedTopics = [];
+
+    /**
      * Create a new consumer instance.
      *
      * @return void
@@ -47,7 +54,6 @@ class DummyClass extends MessageConsumer
      */
     public function handle()
     {
-
-        $this->consumeMessage();
+        $this->consumer();
     }
 }
