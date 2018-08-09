@@ -8,6 +8,7 @@ namespace andZone\Kafka;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 
 class ConsumerMakeCommand extends GeneratorCommand
 {
@@ -49,12 +50,25 @@ class ConsumerMakeCommand extends GeneratorCommand
         return $rootNamespace.'\Console\Consumers';
     }
     /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments()
+    {
+        return [
+            ['name', InputArgument::REQUIRED, 'The name of the command.'],
+        ];
+    }
+    /**
      * Get the console command options.
      *
      * @return array
      */
     protected function getOptions()
     {
-        return [];
+        return [
+            ['command', null, InputOption::VALUE_OPTIONAL, 'The terminal command that should be assigned.', 'command:name'],
+        ];
     }
 }

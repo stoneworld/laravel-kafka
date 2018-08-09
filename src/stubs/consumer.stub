@@ -6,6 +6,19 @@ use AndZone\Kafka\MessageConsumer;
 
 class DummyClass extends MessageConsumer
 {
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'dummy:command';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
 
     /**
      * Create a new consumer instance.
@@ -14,7 +27,7 @@ class DummyClass extends MessageConsumer
      */
     public function __construct()
     {
-        //
+        parent::__construct();
     }
 
     /**
@@ -25,5 +38,16 @@ class DummyClass extends MessageConsumer
     public function consumeMessage()
     {
         //
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+
+        $this->consumeMessage();
     }
 }

@@ -27,6 +27,7 @@ class Conf
         });
         // Set error callback
         $conf->setErrorCb(function ($kafka, $err, $reason) {
+            //event(new ErrorCb($reason));
             file_put_contents("/tmp/err_cb.log", sprintf("Kafka error: %s (reason: %s)", rd_kafka_err2str($err), $reason) . PHP_EOL, FILE_APPEND);
         });
         $this->conf = $conf;
