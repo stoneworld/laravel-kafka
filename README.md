@@ -11,7 +11,7 @@
 
 > bin/kafka-server-start.sh -daemon config/server.properties
 1. 生产者生产消息
-
+    //TODO
 2. 消费者订阅消息
 
 3. 消费者消费消息
