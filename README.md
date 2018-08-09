@@ -8,6 +8,7 @@
 #### laravel-kafka 使用说明文档
 0. 启动服务
 > bin/zookeeper-server-start.sh -daemon config/zookeeper.properties
+
 > bin/kafka-server-start.sh -daemon config/server.properties
 1. 生产者生产消息
 
