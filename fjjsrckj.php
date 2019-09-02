@@ -48,7 +48,7 @@ class fjjsrckj
     public function getDataFromUrl($url)
     {
         $cookie = [
-            "Cookie: UM_distinctid=16b7e9b860386-00c5f68c8a89e1-37677e02-13c680-16b7e9b8604156; _365groups_ClientID=a45086b4-8023-4e97-80fa-3e5fc0312a2d; CNZZDATA1261677421=442356888-1561193775-http%253A%252F%252Fjypx.fjjsrckj.com%252F%7C1561210571; CNZZDATA5050436=cnzz_eid%3D1958639813-1561195423-http%253A%252F%252Fjypx.fjjsrckj.com%252F%26ntime%3D1561211650; JSESSIONID=D55265B2EFC5C3105BE93CF166057C8A"
+            "Cookie: Hm_lvt_a4514061405da7a987d1dc955e42a78b=1567346092; Hm_lpvt_a4514061405da7a987d1dc955e42a78b=1567346092; UM_distinctid=16ced1bb582165-00b2fd7d6f000c-38607501-13c680-16ced1bb58331; _365groups_ClientID=a48acc5a-9a47-417b-892a-317cacb66403; CNZZDATA5050436=cnzz_eid%3D1892253686-1567340917-http%253A%252F%252Fwww.fjjsrckj.com%252F%26ntime%3D1567386465; CNZZDATA1261677421=757325859-1567340872-http%253A%252F%252Fwww.fjjsrckj.com%252F%7C1567386892; JSESSIONID=8C1C446E9BA60F72A3E422A10905E995; adminUserInfo={\"userName\":\"350521197410176078\",\"password\":\"176078\"}"
         ];
         $response = $this->curlRequest->curlGet($url, $cookie);
         $response = json_decode($response, true);
@@ -58,10 +58,11 @@ class fjjsrckj
         return false;
     }
 
-    private function initPlayerAndFinishedOne($courseInfo, $userInfo, $anythingInfo)
+    private function initPlayerAndFinishedOne($courseInfo, $userInfo, $anythingInfo, $value)
     {
+        $currentCourse = $value;
+        $courseTime = $currentCourse['mediaList'][0]['time'];
         $requestTime = sprintf("%d", round(microtime(true)*1000));
-        $requestTime = (int)$requestTime + rand(1000, 8000);
         $head = [
             'appVersion' => '1.0.0',
             'osPlatform' => 'web',
@@ -120,37 +121,48 @@ class fjjsrckj
         echo __LINE__.'-------'.self::INIT_URL."\n";
 
         if ($initResponse['head']['code'] != 200) exit();
+        $studySchedule = $initResponse['data']['core']['studySchedule'];
         $core = $initResponse['data']['core'];
-        $timeingParam['head'] = $head;
-        $timeingParam['data']['extend'] = $content;
-        $timeingParam['data']['core'] = [
-            'primaryKey' => $core['primaryKey'],
-            'courseRecordId' => $core['courseRecordId'],
-            'coursewareRecordId' => $core['coursewareRecordId'],
-            'lessonId' => $core['lessonId'],
-            'lessonLocation' => $core['lessonLocation'],
-            'studyMode' => $core['studyMode'],
-            'studyLastScale' => $core['studyLastScale'],
-            'studyCurrentScale' => $core['studyCurrentScale'],
-            'studySchedule' => 100.0,
-            'timingMode' => $core['timingMode'],
-            'studyStatus' => 1,
-            'lessonStatus' => $core['lessonStatus'],
-            'token' => $core['token'],
-            'intervalTime' => rand(10, 100),
-        ];
-        echo "\n";
-        echo "-------------------------------------timeing start------------------------\n";
-        echo json_encode($timeingParam, true);
-        echo "-------------------------------------timeing end------------------------\n";
+        $initCore = $initResponse['data']['core'];
 
-        $timeResponse = $this->curlRequest->curlPost(self::TIMEING_URL, $timeingParam, true);
-        if ($initResponse['head']['code'] != 200) exit();
-        echo __LINE__.'-------'.self::TIMEING_URL."\n";
-        var_dump($timeResponse);
-        sleep(rand(3, 10));
+        while ((int)$studySchedule < 100) {
+            sleep(15);
+            $requestTime = sprintf("%d", round(microtime(true)*1000));
+            $head['requestTime'] = $requestTime;
+            $timeingParam['head'] = $head;
+            $timeingParam['data']['extend'] = $content;
+            $timeingParam['data']['core'] = [
+                'primaryKey' => $initCore['primaryKey'],
+                'courseRecordId' => $initCore['courseRecordId'],
+                'coursewareRecordId' => $initCore['coursewareRecordId'],
+                'lessonId' => $initCore['lessonId'],
+                'lessonLocation' => $core['lessonLocation'],
+                'studyMode' => $initCore['studyMode'],
+                'studyLastScale' => $core['studyLastScale'] + 15,
+                'studyCurrentScale' => $core['studyCurrentScale'] + 15,
+                'studySchedule' =>  ($courseTime / 15) + $studySchedule,
+                'timingMode' => $initCore['timingMode'],
+                'studyStatus' => 1,
+                'lessonStatus' => $initCore['lessonStatus'],
+                'token' => $initCore['token'],
+                'intervalTime' => rand(10, 100),
+            ];
+            echo "\n";
+            echo "-------------------------------------timeing start------------------------\n";
+            echo json_encode($timeingParam, true);
+            echo "-------------------------------------timeing end------------------------\n";
+
+            $timeResponse = $this->curlRequest->curlPost(self::TIMEING_URL, $timeingParam, true);
+            $timeResponse = json_decode($timeResponse, true);
+
+            $core = $timeResponse['data']['core'];
+            $studySchedule = $core['studySchedule'];
+            if ($initResponse['head']['code'] != 200) exit();
+            echo __LINE__.'-------'.self::TIMEING_URL."\n";
+            var_dump($timeResponse);
+        }
+        echo "学完一个课程";
     }
-
 
     public function run()
     {
@@ -179,7 +191,8 @@ class fjjsrckj
                 $anythingInfoParam['courseWareId'] = $value['id'];
                 $anythingInfoUrl = self::ANYTHING_URL . http_build_query($anythingInfoParam);
                 $anythingInfo = $this->getDataFromUrl($anythingInfoUrl);
-                $initPlayer = $this->initPlayerAndFinishedOne($courseInfo, $userInfo, $anythingInfo);
+
+                $initPlayer = $this->initPlayerAndFinishedOne($courseInfo, $userInfo, $anythingInfo, $value);
             }
 
 
@@ -189,7 +202,6 @@ class fjjsrckj
 }
 
 $study = (new fjjsrckj())->run();
-
 
 class curlRequest
 {
